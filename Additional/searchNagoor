@@ -1,0 +1,38 @@
+<?php
+
+include 'Connection.php';
+$conn = new mysqli($servername, $username, $password, $dbname);
+
+$output = NULL;
+if(isset($_POST['submit'])){
+	//$mysqli = NEW  mysqli("localhost","root","","database");
+	$search = $conn->real_escape_string($_POST['search']);
+	$resultSet = $conn->query("SELECT * FROM $table WHERE Name LIKE '%$search%'");
+	
+	if($resultSet->num_rows > 0)
+	{
+		while($rows=$resultSet->fetch_assoc())
+		{
+			$password = $rows['Password'];
+			$username = $rows['Name'];
+			$Email = $rows['Email'];
+			$output .= "customer UserName: $username<br/>customer userid:$Email<br/><br/>";  
+	}
+	}
+	else
+	{
+		$output =  "no results";
+	}
+}
+?>
+<tr><td><a href="login.php">Return TO LOGIN PAGE</a></td><tr>
+
+<form method="POST">
+<input type="text" name="search" required>
+<input type="submit" name="submit" value="search"/>
+</form>
+
+
+<?php
+echo $output;
+?>

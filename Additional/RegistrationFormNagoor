@@ -1,0 +1,170 @@
+<?php
+ $conn=mysqli_connect("localhost","root","","firstprojectry");
+ 
+ $conn = new mysqli($servername, $username, $password, $dbname);
+ use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+
+ require 'vendor/autoload.php';
+?>
+
+
+<?php
+function HomePage() {
+    echo "please wait redirecting to home page";
+	
+	
+    header("Location: HomePage.php"); 
+    
+}
+	?>
+
+<html> 
+<head></head>
+
+
+<body>
+<?php
+
+if(isset($_POST['submit'])){
+
+    $Name=$_POST['Name'];
+    $email=$_POST['email'];
+    $password=$_POST['password'];
+	$Occupation=$_POST['Occupation'];
+
+    $query="insert into NewUser(Name, Email, Password,Occupation)values('$Name','$email','$password',$Occupation)";
+	$run=mysqli_query($conn,$query);
+	 
+	if($run){
+		echo"data insert successfully";
+		HomePage();
+		
+		//sending welcome email
+		
+$mail = new PHPMailer(true);                              // Passing `true` enables exceptions
+try {
+    //Server settings
+     $mail->SMTPDebug = 2;                                 // Enable verbose debug output
+    $mail->isSMTP();                                      // Set mailer to use SMTP
+    $mail->Host = 'smtp.gmail.com';  // Specify main and backup SMTP servers
+    $mail->SMTPAuth = true;                               // Enable SMTP authentication
+    $mail->Username = 'firstProjectTry@gmail.com';                 // SMTP username
+    $mail->Password = 'testing786';                           // SMTP password
+    $mail->SMTPSecure = 'TLS';                            // Enable TLS encryption, `ssl` also accepted
+    $mail->Port = 587;                                    // TCP port to connect to
+
+    //Recipients
+    $mail->setFrom('No-Repy@firstProjectTry.com', 'No-Reply@firstprojectry.com');
+    //$mail->addAddress('nagoorkj@gmail.com', 'Nagoor'); 
+	$mail->addAddress($email, 'User');    // Add a recipient
+                 // Name is optional
+    
+
+    //Attachments
+    //$mail->addAttachment('/var/tmp/file.tar.gz');         // Add attachments
+    //$mail->addAttachment('/tmp/image.jpg', 'new.jpg');    // Optional name
+
+    //Content
+    $mail->isHTML(true);                                  // Set email format to HTML
+    $mail->Subject = 'Welcome to firstprojectry ';
+    $mail->Body    = 
+	
+	'Hi '.$Name.',<p><b>Thanks for joined with us</b></br> <p>Regards,</p><br>FPT TEAM	';
+
+	
+	
+    $mail->AltBody = 'This is the body in plain text for non-HTML mail clients';
+
+    $mail->send();
+    echo 'Message has been sent Successfully';
+	 header("Location: ChangePasswordUsingOTP.php"); 
+} catch (Exception $e) {
+    echo 'Message could not be sent.';
+    echo 'Mailer Error: ' . $mail->ErrorInfo;
+}
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+	}
+	else{
+		echo"error:".mysqli_error($conn);
+	}
+}
+?>
+
+
+
+<center><h1>Registration Form</h1></center>
+<div class="form">
+<form action="" method="POST">
+
+<center>
+
+<table>  
+<tr>
+<th></th> 
+<th><a href="login.php">Existing User Click here</a></th>
+</tr>
+<tr>
+<td>Name</td>
+<td><input type="text" name="Name" placeholder="enter your name" required></td>
+</tr>
+<tr>
+<td>Email</td>
+<td><input type="email" name="email" placeholder="enter your Email" required></td>
+</tr>
+<tr>
+<td>Password</td>
+<td><input type="password" name="password" placeholder="enter your password" required></td>
+</tr>
+
+<tr>
+<td>Occupation</td>
+<td>
+
+
+
+
+<select name="Occupation">
+ <option>---Select Subject--</option>
+ <option value="Electrician">Electrician</option>
+ <option value="Plumber">Plumber</option>
+ <option value="Civil Worker">Civil Worker</option>
+ <option value="Mechanic">Mechanic</option>
+ <option value="Occupation">Occupation</option>
+ 
+ </select>
+
+
+</td>
+
+
+
+</tr>
+
+
+
+
+
+<tr>
+<td><input type="submit" value="submit" name="submit"></td>
+</tr>
+
+
+
+
+</table>
+</center>
+</form>
+</body>
+
+</html> 
